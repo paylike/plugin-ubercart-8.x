@@ -1,0 +1,7 @@
+name: Ubercart Paylike
+type: module
+description: 'Provides a Paylike payment method for Ubercart.'
+package: 'Ubercart - payment'
+core: 8.x
+dependencies:
+  - uc_credit
