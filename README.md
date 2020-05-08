@@ -20,6 +20,8 @@ Once you have installed Ubercart on your Drupal setup, follow these simple steps
 1. Create a live account
 1. Create an app key for your Drupal website
 1. Upload the ```uc_paylike.zip``` trough the Drupal Admin (You can also find the latest release at https://www.drupal.org/project/uc_paylike)
+1. Download and install the Paylike PHP Library version 1.0.5 or newer
+       from https://github.com/paylike/php-api/releases. Use `composer require paylike/php-api` in the vendors folder
 1. Activate the plugin through the 'Extend' screen in Drupal.
 1.  Visit your Ubercart Store Administration page, Configuration
        section, and enable the gateway under the Payment methods.
@@ -32,8 +34,6 @@ Once you have installed Ubercart on your Drupal setup, follow these simple steps
        block to manually capture a needed amount of money.
 1. Insert Paylike API keys, from https://app.paylike.io
        (admin/store/config/payment/method/credit_card)
-1. Download and install the Paylike PHP Library version 1.0.5 or newer
-       from https://github.com/paylike/php-api/releases. Use `composer require paylike/php-api` in the vendors folder
 
 ## Updating settings
 
