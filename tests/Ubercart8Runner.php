@@ -216,7 +216,6 @@ class Ubercart8Runner extends Ubercart8TestHelper
         $this->type("#edit-panes-delivery-last-name", "admin");
         $this->type("#edit-panes-delivery-street1", "admin");
         $this->type("#edit-panes-delivery-city", "admin");
-        $this->selectByText(".js-form-wrapper #edit-panes-delivery-zone", "A");
         $this->type("#edit-panes-delivery-postal-code", "000000");
         $this->click('#edit-panes-billing-copy-address');
         $this->waitForElement('.paylike-button');
