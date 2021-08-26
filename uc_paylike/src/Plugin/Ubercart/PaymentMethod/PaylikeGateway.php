@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_credit\CreditCardPaymentMethodBase;
 use Drupal\uc_order\OrderInterface;
 use Paylike\Exception\ApiException;
+use Paylike\Data\Currencies;
 
 /**
  *  Ubercart gateway payment method.
@@ -20,6 +21,8 @@ use Paylike\Exception\ApiException;
 class PaylikeGateway extends CreditCardPaymentMethodBase
 {
 
+  /** Paylike Ubercart plugin version. */
+  const PAYLIKE_MODULE_VERSION = '8.x-1.2';
   /**
    * @var \Paylike\Paylike
    */
@@ -151,13 +154,25 @@ class PaylikeGateway extends CreditCardPaymentMethodBase
     }
 
     $ubercartInfo = \Drupal::service('extension.list.module')->getExtensionInfo('uc_cart');
+    /** Verify if payment is in test mode, and return 'true'. If not, return 'false'. */
+    $testMode = (1 == $this->configuration['testmode']) ? (true) : (false);
+    /** Get order currency. */
+    $currency = $order->getCurrency();
+    /** Get all currencies attributes using Paylike\Data\Currencies class. */
+    $allCurrencies = (new Currencies)->all();
+    /** Extract exponent using order currency code. */
+    $exponent = isset($allCurrencies[$currency]) ? ($allCurrencies[$currency]['exponent']) : (null);
 
     // Paylike popup settings
     $config = [
-      'currency' => $order->getCurrency(),
-      'amount' => uc_currency_format($order->getTotal(), false, false, false),
       'locale' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
       'title' => $this->getPopupTitle(),
+      'test' => $testMode,
+      'amount' => [
+        'currency' => $currency,
+        'exponent' => $exponent,
+        'value' => (int)(uc_currency_format($order->getTotal(), false, false, false)),
+      ],
       'custom' => [
         'email' => $order->getEmail(),
         'orderId' => $order->id(),
@@ -175,6 +190,9 @@ class PaylikeGateway extends CreditCardPaymentMethodBase
         'ecommerce' => [
           'name' => 'Ubercart',
           'version' => $ubercartInfo['version'],
+        ],
+        'paylikePluginVersion' => [
+          'version' => self::PAYLIKE_MODULE_VERSION,
         ],
       ],
     ];

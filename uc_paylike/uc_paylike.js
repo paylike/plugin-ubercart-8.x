@@ -20,8 +20,9 @@
 
         $(this).click(function (event) {
           event.preventDefault();
-          var paylike = Paylike(drupalSettings.uc_paylike.publicKey),
-            config = drupalSettings.uc_paylike.config;
+          var paylike = Paylike({key: drupalSettings.uc_paylike.publicKey});
+
+          config = drupalSettings.uc_paylike.config;
 
           // Get customer information from delivery or billing pane
           var customer = [
@@ -38,7 +39,7 @@
           config.custom.customer.name = customer.filter(String).join(' ');
           config.custom.customer.address = address.filter(String).join(', ');
           console.log(config.custom.customer);
-          paylike.popup(config, handleResponse);
+          paylike.pay(config, handleResponse);
         });
       });
     }

@@ -17,7 +17,7 @@ Once you have installed Ubercart on your Drupal setup, follow these simple steps
 1. Create a live account
 1. Create an app key for your Drupal website
 1. Upload the ```uc_paylike.zip``` trough the Drupal Admin (You can also find the latest release at https://www.drupal.org/project/uc_paylike)
-1. Download and install the Paylike PHP Library version 1.0.5 or newer from https://github.com/paylike/php-api/releases. Use `composer require paylike/php-api` in the vendors folder.
+1. Download and install the Paylike PHP Library version 1.0.8 or newer from https://github.com/paylike/php-api/releases. Use `composer require paylike/php-api` in the vendors folder.
 If you use `composer require drupal/uc_paylike` you can skip this step.
 1. Activate the plugin through the 'Extend' screen in Drupal.
 1. Visit your Ubercart Store Administration page, Configuration section, and enable the gateway under the Payment methods. (admin/store/config/payment)
@@ -29,17 +29,30 @@ If you use `composer require drupal/uc_paylike` you can skip this step.
 Under the Paylike payment method settings, you can:
  * Update the payment method text in the payment gateways list
  * Update the payment method description in the payment gateways list
- * Update the title that shows up in the payment popup 
+ * Update the title that shows up in the payment popup
  * Add test/live keys
  * Set payment mode (test/live)
- * Change the capture type (Instant/Delayed)
- 
- ## How to
- 
+ * Change the capture type (Authorize+Capture / Authorize only)
+
+ ## How to capture/refund/void
+- You can do capture/refund/void to an order using the Payment box in the order View Tab by press `Process card` link.
+- The amount for partial capture, refund or void can be specified in `Charge Amount` input field.
+
  1. Capture
- * In Instant mode, the orders are captured automatically
- * In delayed mode you can capture an order by using the Payment box in the View Tab
+    * In Instant mode, the orders are captured automatically.
+    * In delayed mode you can capture an order selecting authorized transaction and then click `Capture amount to this authorization` button.
  2. Refund
-   * To refund an order move you can use the Payment box in the View Tab. Click process card and then refund.
+    * To refund an order selecting authorized transaction and then click `Refund` button.
  3. Void
-   * To void an order move you can use the Payment box in the View Tab. Click process card and then void.
+    * To void an order selecting authorized transaction and then click `Void authorization` button.
+
+## Available features
+1. Capture
+   * Opencart admin panel: full/partial capture
+   * Paylike admin panel: full/partial capture
+2. Refund
+   * Opencart admin panel: full/partial refund
+   * Paylike admin panel: full/partial refund
+3. Void
+   * Opencart admin panel: full/partial void
+   * Paylike admin panel: full/partial void

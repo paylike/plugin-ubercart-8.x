@@ -5,6 +5,6 @@
     "homepage": "https://www.drupal.org/project/uc_paylike",
     "require": {
         "drupal/ubercart": "^8.4",
-        "paylike/php-api": "^1.0.5"
+        "paylike/php-api": "^1.0.8"
     }
 }
