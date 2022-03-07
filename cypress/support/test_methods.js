@@ -45,6 +45,25 @@ export var TestMethods = {
     },
 
     /**
+     * Make payment with specified currency and process order
+     *
+     * @param {String} currency
+     * @param {String} paylikeAction
+     * @param {Boolean} partialAmount
+     */
+     payWithSelectedCurrency(currency, paylikeAction, partialAmount = false) {
+        /** Make an instant payment. */
+        it(`makes a Paylike payment with "${currency}"`, () => {
+            this.makePaymentFromFrontend(currency);
+        });
+
+        /** Process last order from admin panel. */
+        it(`process (${paylikeAction}) an order from admin panel`, () => {
+            this.processOrderFromAdmin(paylikeAction, partialAmount);
+        });
+    },
+
+    /**
      * Make an instant payment
      * @param {String} currency
      */
@@ -69,11 +88,11 @@ export var TestMethods = {
         cy.get('#edit-panes-delivery-last-name').clear().type('lastName');
         cy.get('#edit-panes-delivery-street1').clear().type('street');
         cy.get('#edit-panes-delivery-city').clear().type('city');
-        cy.get('#edit-panes-delivery-zone').select(0);
+        cy.get('#edit-panes-delivery-zone').select(1);
         cy.get('#edit-panes-delivery-postal-code').clear().type('000000');
 
         /** Select that billing address to be the sam as shipping. */
-        /** This can be enable by default from ubercart settings. */
+        /** This can be enabled by default from ubercart settings. */
         cy.get('#edit-panes-billing-copy-address').click();
         cy.wait(1000);
 
@@ -104,25 +123,6 @@ export var TestMethods = {
         cy.get('.button.button--primary.js-form-submit.form-submit', {timeout: 8000}).should('be.visible').click();
 
         cy.get('h1.page-title', {timeout: 8000}).should('be.visible').contains('Order complete');
-    },
-
-    /**
-     * Make payment with specified currency and process order
-     *
-     * @param {String} currency
-     * @param {String} paylikeAction
-     * @param {Boolean} partialAmount
-     */
-     payWithSelectedCurrency(currency, paylikeAction, partialAmount = false) {
-        /** Make an instant payment. */
-        it(`makes a Paylike payment with "${currency}"`, () => {
-            this.makePaymentFromFrontend(currency);
-        });
-
-        /** Process last order from admin panel. */
-        it(`process (${paylikeAction}) an order from admin panel`, () => {
-            this.processOrderFromAdmin(paylikeAction, partialAmount);
-        });
     },
 
     /**
