@@ -54,39 +54,41 @@ export var TestMethods = {
 
         /** Add to cart random product. */
         var randomInt = PaylikeTestHelper.getRandomInt(/*max*/ 1);
-        cy.get('.node-add-to-cart').eq(randomInt).click();
+        cy.get('.button.js-form-submit.form-submit').eq(randomInt).click();
         cy.wait(1000);
 
         /** Proceed to checkout. */
         cy.get('#edit-checkout--2').click();
 
         /** Select saved address. */
-        cy.get('#edit-panes-delivery-select-address').select('0');
+        // cy.get('#edit-panes-delivery-select-address').select('0');
 
-        cy.wait(2000);
+        /** Fill in shipping address fields. */
+        /** We do not need to fill in address if have previous orders. */
+        cy.get('#edit-panes-delivery-first-name').clear().type('firstName');
+        cy.get('#edit-panes-delivery-last-name').clear().type('lastName');
+        cy.get('#edit-panes-delivery-street1').clear().type('street');
+        cy.get('#edit-panes-delivery-city').clear().type('city');
+        cy.get('#edit-panes-delivery-postal-code').clear().type('000000');
 
         /** Select that billing address to be the sam as shipping. */
         cy.get('#edit-panes-billing-copy-address').click();
-
-        /** Choose Paylike. */
-        // cy.get('#edit-panes-payment-payment-method-credit--2').click();
-
-        /** Wait for window paylike amount to be available. */
-        cy.wait(500);
+        cy.wait(1000);
 
         /** Get & Verify amount. */
-        cy.get('.line-item-total .price .uc-price').then(($totalAmount) => {
+        cy.get('.line-item-total .price').then(($totalAmount) => {
             cy.window().then(win => {
                 var expectedAmount = PaylikeTestHelper.filterAndGetAmountInMinor($totalAmount, currency);
-                var orderTotalAmount = Number(win.Drupal.settings.uc_paylike.config.amount);
+                var orderTotalAmount = Number(win.drupalSettings.uc_paylike.config.amount.value);
                 expect(expectedAmount).to.eq(orderTotalAmount);
             });
         });
 
-        cy.wait(1000);
+        /** Choose Paylike (if we have more than one payment methods). */
+        // cy.get(`input[id*="edit-panes-payment-payment-method-${this.PaylikeName}"]`).click();
 
         /** Show paylike popup. */
-        cy.get('#edit-panes-payment-details-paylike-button--2').click();
+        cy.get(`input[id*="edit-panes-payment-details-${this.PaylikeName}"]`).click();
 
         /**
          * Fill in Paylike popup.
@@ -99,9 +101,9 @@ export var TestMethods = {
         cy.get('#edit-continue').click();
 
         /** Check if order was paid (edit-submit button be visible) and submit it. */
-        cy.get('.ucSubmitOrderThrobber-processed').should('be.visible').click();
+        cy.get('#edit-submit').should('be.visible').click();
 
-        cy.get('h1#page-title').should('be.visible').contains('Order complete');
+        cy.get('h1.page-title').should('be.visible').contains('Order complete');
     },
 
     /**
@@ -133,7 +135,7 @@ export var TestMethods = {
         cy.goToPage(this.OrdersPageAdminUrl);
 
         // /** Click on first (latest in time) order from orders table. */
-        cy.get('td.views-field.views-field-order-id a').first().click();
+        cy.get('.dropbutton > .view > a').first().click();
 
         /**
          * Take specific action on order
@@ -147,7 +149,8 @@ export var TestMethods = {
      * @param {Boolean} partialAmount
      */
      paylikeActionOnOrderAmount(paylikeAction, partialAmount = false) {
-        cy.get('#edit-submit').click();
+        /** Go to paylike transaction page. */
+        cy.get(`a[href*="/credit/${this.PaylikeName}"]`).click();
 
         switch (paylikeAction) {
             case 'capture':
@@ -167,7 +170,7 @@ export var TestMethods = {
                     cy.get('#edit-amount').then($editAmountInput => {
                         /**
                          * Put 15 major units to be refunded.
-                         * Premise: any product must have price >= 15.
+                         * Premise: any product must have price (or captured amount) >= 15.
                          */
                         $editAmountInput.val(15);
                     });
@@ -193,7 +196,7 @@ export var TestMethods = {
         }
 
         /** Check if success message. */
-        cy.get('#console div.messages.status').should('contain', 'successfully');
+        cy.get('div.messages.messages--status').should('contain', 'successfully');
     },
 
     /**
@@ -205,7 +208,7 @@ export var TestMethods = {
             cy.goToPage(this.ShopAdminUrl);
 
             /** Select currency & save. */
-            cy.get('.vertical-tabs-list li:nth-child(3)').click();
+            cy.get('.vertical-tabs__menu li:nth-child(3)').click();
 
             cy.get('#edit-uc-currency-code').clear().type(currency);
             cy.get('#edit-uc-currency-sign').clear().type(currency);
