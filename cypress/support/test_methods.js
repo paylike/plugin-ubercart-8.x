@@ -167,12 +167,14 @@ export var TestMethods = {
                 break;
             case 'refund':
                 if (partialAmount) {
-                    cy.get('#edit-amount').then($editAmountInput => {
-                        /**
-                         * Put 15 major units to be refunded.
-                         * Premise: any product must have price (or captured amount) >= 15.
-                         */
-                        $editAmountInput.val(15);
+                    /** Partial refund */
+                    cy.get('#edit-amount').clear().type(15);
+                } else {
+                    /** Total refund */
+                    cy.get('strong').contains('Order total').then($totalCapturedAmount => {
+                        var totalAmount = ($totalCapturedAmount.text()).replace(/[^0-9,.][a-z.]*/g, '');
+                        /** Subtract 10 major units from amount. */
+                        cy.get('#edit-amount').clear().type(Math.round(totalAmount - 10));
                     });
                 }
                 /** Select authorized/captured transaction. */
