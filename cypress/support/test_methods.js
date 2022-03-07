@@ -225,29 +225,21 @@ export var TestMethods = {
         /** Go to Virtuemart config page. */
         cy.goToPage(this.ModulesAdminUrl);
 
-        /** Get framework version. */
-        cy.get('span.text.module-description').first().click();
-        cy.get('.requirements').first().then($frameworkVersion => {
-            var frameworkVersion = $frameworkVersion.children(2).text();
-            cy.wrap(frameworkVersion).as('frameworkVersion');
-        });
-
-        /** Get shop version. */
-        cy.get('.admin-requirements').contains('uc_').closest('div.requirements').then($shopVersion => {
-            var shopVersion = $shopVersion.children('td:nth-child(2)').text();
-            cy.wrap(shopVersion).as('shopVersion');
-        });
-
-        /** Get paylike version. */
-        cy.get('label[for="edit-modules-ubercart-payment-uc-paylike-enable"]').closest('tr').then($paylikeVersion => {
-            var paylikeVersion = $paylikeVersion.children('td:nth-child(3)').text();
-            cy.wrap(paylikeVersion).as('paylikeVersion');
+        /** Get framework, shop and payment plugin version. */
+        cy.document().then($doc => {
+            var frameworkVersion = $doc.querySelectorAll('tr[data-drupal-selector*="edit-module"] .admin-requirements')[1].innerText
+            var shopVersion = $doc.querySelectorAll('tr[data-drupal-selector*="uc-store"] .admin-requirements')[1].innerText
+            var pluginVersion = $doc.querySelectorAll(`tr[data-drupal-selector*="uc-${this.PaylikeName}"] .admin-requirements`)[1].innerText
+            
+            cy.wrap(frameworkVersion.replace('Version: ', '')).as('frameworkVersion');
+            cy.wrap(shopVersion.replace('Version: ', '')).as('shopVersion');
+            cy.wrap(pluginVersion.replace('Version: ', '')).as('pluginVersion');
         });
 
         /** Get global variables and make log data request to remote url. */
         cy.get('@frameworkVersion').then(frameworkVersion => {
             cy.get('@shopVersion').then(shopVersion => {
-                cy.get('@paylikeVersion').then(paylikeVersion => {
+                cy.get('@pluginVersion').then(pluginVersion => {
 
                     cy.request('GET', this.RemoteVersionLogUrl, {
                         key: shopVersion,
@@ -255,7 +247,7 @@ export var TestMethods = {
                         view: 'html',
                         framework: frameworkVersion,
                         ecommerce: shopVersion,
-                        plugin: paylikeVersion
+                        plugin: pluginVersion
                     }).then((resp) => {
                         expect(resp.status).to.eq(200);
                     });
