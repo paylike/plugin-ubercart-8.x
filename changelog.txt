@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 8.x-1.2.1:
+### fix - display plugin version in modules page
+
 ## 8.x-1.2:
 ### Added
 - "changelog.txt" file
