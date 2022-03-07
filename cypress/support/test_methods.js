@@ -61,17 +61,19 @@ export var TestMethods = {
         cy.get('#edit-checkout--2').click();
 
         /** Select saved address. */
+        /** Right now, selection of a saved address has no effect to autofill fields. */
         // cy.get('#edit-panes-delivery-select-address').select('0');
 
         /** Fill in shipping address fields. */
-        /** We do not need to fill in address if have previous orders. */
         cy.get('#edit-panes-delivery-first-name').clear().type('firstName');
         cy.get('#edit-panes-delivery-last-name').clear().type('lastName');
         cy.get('#edit-panes-delivery-street1').clear().type('street');
         cy.get('#edit-panes-delivery-city').clear().type('city');
+        cy.get('#edit-panes-delivery-zone').select(0);
         cy.get('#edit-panes-delivery-postal-code').clear().type('000000');
 
         /** Select that billing address to be the sam as shipping. */
+        /** This can be enable by default from ubercart settings. */
         cy.get('#edit-panes-billing-copy-address').click();
         cy.wait(1000);
 
@@ -95,15 +97,13 @@ export var TestMethods = {
          */
          PaylikeTestHelper.fillAndSubmitPaylikePopup();
 
-        cy.wait(1000);
-
         /** Go to order confirmation. */
-        cy.get('#edit-continue').click();
+        cy.get('#edit-continue', {timeout: 8000}).click();
 
         /** Check if order was paid (edit-submit button be visible) and submit it. */
-        cy.get('#edit-submit').should('be.visible').click();
+        cy.get('.button.button--primary.js-form-submit.form-submit', {timeout: 8000}).should('be.visible').click();
 
-        cy.get('h1.page-title', {timeout: 15000}).should('be.visible').contains('Order complete');
+        cy.get('h1.page-title', {timeout: 8000}).should('be.visible').contains('Order complete');
     },
 
     /**
