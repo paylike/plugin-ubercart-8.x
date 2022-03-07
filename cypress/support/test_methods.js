@@ -226,14 +226,15 @@ export var TestMethods = {
         cy.goToPage(this.ModulesAdminUrl);
 
         /** Get framework version. */
-        cy.get('#edit-modules-core tbody tr').first().then($frameworkVersion => {
-            var frameworkVersion = $frameworkVersion.children('td:nth-child(3)').text();
+        cy.get('span.text.module-description').first().click();
+        cy.get('.requirements').first().then($frameworkVersion => {
+            var frameworkVersion = $frameworkVersion.children(2).text();
             cy.wrap(frameworkVersion).as('frameworkVersion');
         });
 
         /** Get shop version. */
-        cy.get('label[for="edit-modules-ubercart-core-uc-store-enable"]').closest('tr').then($shopVersion => {
-            var shopVersion = $shopVersion.children('td:nth-child(3)').text();
+        cy.get('.admin-requirements').contains('uc_').closest('div.requirements').then($shopVersion => {
+            var shopVersion = $shopVersion.children('td:nth-child(2)').text();
             cy.wrap(shopVersion).as('shopVersion');
         });
 
