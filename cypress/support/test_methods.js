@@ -103,7 +103,7 @@ export var TestMethods = {
         /** Check if order was paid (edit-submit button be visible) and submit it. */
         cy.get('#edit-submit').should('be.visible').click();
 
-        cy.get('h1.page-title').should('be.visible').contains('Order complete');
+        cy.get('h1.page-title', {timeout: 15000}).should('be.visible').contains('Order complete');
     },
 
     /**
@@ -230,7 +230,7 @@ export var TestMethods = {
             var frameworkVersion = $doc.querySelectorAll('tr[data-drupal-selector*="edit-module"] .admin-requirements')[1].innerText
             var shopVersion = $doc.querySelectorAll('tr[data-drupal-selector*="uc-store"] .admin-requirements')[1].innerText
             var pluginVersion = $doc.querySelectorAll(`tr[data-drupal-selector*="uc-${this.PaylikeName}"] .admin-requirements`)[1].innerText
-            
+
             cy.wrap(frameworkVersion.replace('Version: ', '')).as('frameworkVersion');
             cy.wrap(shopVersion.replace('Version: ', '')).as('shopVersion');
             cy.wrap(pluginVersion.replace('Version: ', '')).as('pluginVersion');
