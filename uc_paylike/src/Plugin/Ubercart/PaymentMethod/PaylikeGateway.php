@@ -22,7 +22,7 @@ class PaylikeGateway extends CreditCardPaymentMethodBase
 {
 
   /** Paylike Ubercart plugin version. */
-  const PAYLIKE_MODULE_VERSION = '8.x-1.2.1';
+  const PAYLIKE_MODULE_VERSION = '8.x-1.3';
   /**
    * @var \Paylike\Paylike
    */
