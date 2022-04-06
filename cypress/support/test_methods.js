@@ -117,7 +117,7 @@ export var TestMethods = {
          PaylikeTestHelper.fillAndSubmitPaylikePopup();
 
         /** Go to order confirmation. */
-        cy.get('#edit-continue', {timeout: 8000}).click();
+        cy.get('#edit-continue', {timeout: 30000}).click();
 
         /** Check if order was paid (edit-submit button be visible) and submit it. */
         cy.get('.button.button--primary.js-form-submit.form-submit', {timeout: 8000}).should('be.visible').click();
